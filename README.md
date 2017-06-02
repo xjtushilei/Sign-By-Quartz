@@ -1,2 +1,6 @@
 # Sign-By-Quartz
-享受你的生活，从自动签到系统开始。使用Spring-boot，Spring-security，thymeleaf，quartz，AmazeUI，Mail
+享受你的生活，从自动签到系统开始。
+
+# 主要机制
+
+在数据库中建立一个用户表，每到一个签到的时间点，创建n个线程，每个线程实现不同时间随机签到，让不同的人有不同的签到时间！以假乱真。

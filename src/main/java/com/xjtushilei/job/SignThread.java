@@ -69,7 +69,13 @@ public class SignThread extends Thread {
         try {
             error = new Random().nextInt(error);
             TimeUnit.SECONDS.sleep(error);
-            String html = restTemplate.getForObject(signUrl + "?id=" + idCard, String.class);
+            String html = "";
+            try {
+                html = restTemplate.getForObject(signUrl + "?id=" + idCard, String.class);
+            } catch (Exception e) {
+                html = "<h1>大概率是因为教研室那个刷卡电脑没网或那个电脑坏了或者9楼服务器停网了。</h1>";
+                MailUtil.sendMail(email, "[" + LocalDateTime.now() + "][" + name + "]签到【失败】！！！", html);
+            }
             Document doc = Jsoup.parse(html);
             String state = doc.getElementById("corner").text();
             String table = "";
@@ -84,10 +90,8 @@ public class SignThread extends Thread {
             MailUtil.sendMail(email, "[" + LocalDateTime.now() + "][" + name + "]的签到提醒", html);
         } catch (InterruptedException e) {
             logger.error("延迟启动失败！", e);
-        } catch (MessagingException e) {
+        } catch (MessagingException | IOException e) {
             logger.error("邮件发送失败！", e);
-        } catch (IOException e) {
-            logger.error("读取邮件配置失败！", e);
         }
     }
 
