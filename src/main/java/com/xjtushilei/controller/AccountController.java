@@ -1,12 +1,12 @@
-package com.xjtushilei.security.controller;
+package com.xjtushilei.controller;
 
 /**
  * @author shilei
  * @Date 2017/6/1.
  */
 
-import com.xjtushilei.security.domain.SysUser;
-import com.xjtushilei.security.servive.UserService;
+import com.xjtushilei.domain.SysUser;
+import com.xjtushilei.servive.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class AccountController {
                 // 若匹配，跳转到blog主页
                 // 查询该用户下的所有博客
 
-                return "blog/blog";
+                return "index";
             } else {
                 // 若不匹配，提示用户名或密码错误
                 model.addAttribute("error", "用户名或密码错误！");

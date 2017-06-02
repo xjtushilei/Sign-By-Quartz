@@ -21,20 +21,18 @@ public class UserInfo {
     private LocalTime time5;
     private LocalTime time6;
 
-    private int error;
+    private int error1;
+    private int error2;
+    private int error3;
+    private int error4;
+    private int error5;
+    private int error6;
 
 
     public UserInfo() {
     }
 
-    public UserInfo(String name, String idCard, String email, int error) {
-        this.name = name;
-        this.idCard = idCard;
-        this.email = email;
-        this.error = error;
-    }
-
-    public UserInfo(String name, String idCard, String email, LocalTime time1, LocalTime time2, LocalTime time3, LocalTime time4, LocalTime time5, LocalTime time6, int error) {
+    public UserInfo(String name, String idCard, String email, LocalTime time1, LocalTime time2, LocalTime time3, LocalTime time4, LocalTime time5, LocalTime time6, int error1, int error2, int error3, int error4, int error5, int error6) {
         this.name = name;
         this.idCard = idCard;
         this.email = email;
@@ -44,8 +42,14 @@ public class UserInfo {
         this.time4 = time4;
         this.time5 = time5;
         this.time6 = time6;
-        this.error = error;
+        this.error1 = error1;
+        this.error2 = error2;
+        this.error3 = error3;
+        this.error4 = error4;
+        this.error5 = error5;
+        this.error6 = error6;
     }
+
 
     public String getName() {
         return name;
@@ -119,12 +123,52 @@ public class UserInfo {
         this.time6 = time6;
     }
 
-    public int getError() {
-        return error;
+    public int getError1() {
+        return error1;
     }
 
-    public void setError(int error) {
-        this.error = error;
+    public void setError1(int error1) {
+        this.error1 = error1;
+    }
+
+    public int getError2() {
+        return error2;
+    }
+
+    public void setError2(int error2) {
+        this.error2 = error2;
+    }
+
+    public int getError3() {
+        return error3;
+    }
+
+    public void setError3(int error3) {
+        this.error3 = error3;
+    }
+
+    public int getError4() {
+        return error4;
+    }
+
+    public void setError4(int error4) {
+        this.error4 = error4;
+    }
+
+    public int getError5() {
+        return error5;
+    }
+
+    public void setError5(int error5) {
+        this.error5 = error5;
+    }
+
+    public int getError6() {
+        return error6;
+    }
+
+    public void setError6(int error6) {
+        this.error6 = error6;
     }
 }
 

@@ -1,7 +1,7 @@
-package com.xjtushilei.security.servive;
+package com.xjtushilei.servive;
 
-import com.xjtushilei.security.domain.SysUser;
-import com.xjtushilei.security.repository.SysUserRepository;
+import com.xjtushilei.domain.SysUser;
+import com.xjtushilei.repository.SysUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

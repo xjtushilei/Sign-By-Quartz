@@ -1,6 +1,6 @@
-package com.xjtushilei.security.config;
+package com.xjtushilei.conmon;
 
-import com.xjtushilei.security.servive.UserService;
+import com.xjtushilei.servive.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

@@ -41,8 +41,8 @@
     <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
         <h3 class="am-text-center">登录</h3>
         <hr>
-        <div th:if="${param.error}" class="am-alert" data-am-alert="">
-            <button type="button" class="am-close">&times;</button>
+        <div th:if="${param.error}" class="am-alert">
+            <button type="button" class="am-close" id="b1">&times;</button>
             <p th:text="${error}"></p>
         </div>
         <br>
@@ -72,5 +72,6 @@
 
 <link rel="stylesheet" th:href="@{plugs/jquery.min.js}"/>
 <link rel="stylesheet" th:href="@{AmazeUI/js/amazeui.min.js}"/>
+
 </body>
 </html>

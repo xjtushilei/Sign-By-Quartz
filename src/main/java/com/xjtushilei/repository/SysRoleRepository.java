@@ -1,6 +1,6 @@
-package com.xjtushilei.security.repository;
+package com.xjtushilei.repository;
 
-import com.xjtushilei.security.domain.SysRole;
+import com.xjtushilei.domain.SysRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

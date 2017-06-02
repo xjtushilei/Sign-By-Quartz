@@ -1,6 +1,6 @@
-package com.xjtushilei.security.repository;
+package com.xjtushilei.repository;
 
-import com.xjtushilei.security.domain.SysUser;
+import com.xjtushilei.domain.SysUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

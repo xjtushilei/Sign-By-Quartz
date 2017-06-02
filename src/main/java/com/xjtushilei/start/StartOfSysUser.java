@@ -1,9 +1,9 @@
 package com.xjtushilei.start;
 
-import com.xjtushilei.security.domain.SysRole;
-import com.xjtushilei.security.domain.SysUser;
-import com.xjtushilei.security.repository.SysRoleRepository;
-import com.xjtushilei.security.repository.SysUserRepository;
+import com.xjtushilei.domain.SysRole;
+import com.xjtushilei.domain.SysUser;
+import com.xjtushilei.repository.SysRoleRepository;
+import com.xjtushilei.repository.SysUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

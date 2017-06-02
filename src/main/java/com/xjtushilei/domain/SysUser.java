@@ -1,4 +1,4 @@
-package com.xjtushilei.security.domain;
+package com.xjtushilei.domain;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

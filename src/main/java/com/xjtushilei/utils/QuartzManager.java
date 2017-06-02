@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalTime;
 
-import static org.quartz.CronScheduleBuilder.dailyAtHourAndMinute;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
@@ -55,18 +54,18 @@ public class QuartzManager {
         /**
          * 检测job是否存在，处理旧的job
          */
-        JobKey jobKey = JobKey.jobKey(userInfo.getName() + "-" + userInfo.getIdCard(), JOB_GROUP_NAME);
-        try {
-            if (scheduler.checkExists(jobKey)) {
-                logger.info("存在该job，开始进行删除");
-                //暂停任务
-                try {
-                    scheduler.pauseJob(jobKey);
-                } catch (SchedulerException e) {
-                    logger.error("任务停止失败！", e);
-                }
-                // 删除触发器
-                for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
+            try {
+                JobKey jobKey = JobKey.jobKey(userInfo.getName() + "-" + userInfo.getIdCard() + "-" + i, JOB_GROUP_NAME);
+                if (scheduler.checkExists(jobKey)) {
+                    logger.info("存在该job，开始进行删除");
+                    //暂停任务
+                    try {
+                        scheduler.pauseJob(jobKey);
+                    } catch (SchedulerException e) {
+                        logger.error("任务停止失败！", e);
+                    }
+                    // 删除触发器
                     TriggerKey triggerKey = TriggerKey.triggerKey(userInfo.getName() + "-" + userInfo.getIdCard() + "-" + i,
                             TRIGGER_GROUP_NAME);
                     try {
@@ -74,61 +73,58 @@ public class QuartzManager {
                     } catch (SchedulerException e) {
                         logger.error("定时器<" + i + ">停止失败！", e);
                     }
+                    // 删除job
+                    scheduler.deleteJob(jobKey);
                 }
-                // 删除job
-                scheduler.deleteJob(jobKey);
+            } catch (SchedulerException e) {
+                logger.error("检查任务是否存在出错！", e);
             }
-        } catch (SchedulerException e) {
-            logger.error("检查任务是否存在出错！", e);
         }
+
 
         /**
          * 处理新的job,进行添加操作!
          */
-        //        添加job
-        JobDetail jobDetail = newJob(SignJob.class)
-                .withIdentity(userInfo.getName() + "-" + userInfo.getIdCard(), JOB_GROUP_NAME)
-                .usingJobData("name", userInfo.getName())
-                .usingJobData("email", userInfo.getEmail())
-                .usingJobData("idCard", userInfo.getIdCard())
-                .usingJobData("error", String.valueOf(userInfo.getError()))
-                .storeDurably()
-                .build();
+        Class info = userInfo.getClass();
         try {
-            scheduler.addJob(jobDetail, false);
-        } catch (SchedulerException e) {
-            logger.error("任务添加失败！", e);
-        }
-
-        //添加触发器
-        try {
-            Class info = userInfo.getClass();
             for (int i = 0; i < 6; i++) {
+                //添加job
+                Method method = info.getDeclaredMethod("getError" + (i + 1));
+                int error = (int) method.invoke(userInfo);
+                JobDetail jobDetail = newJob(SignJob.class)
+                        .withIdentity(userInfo.getName() + "-" + userInfo.getIdCard() + "-" + i, JOB_GROUP_NAME)
+                        .usingJobData("name", userInfo.getName())
+                        .usingJobData("email", userInfo.getEmail())
+                        .usingJobData("idCard", userInfo.getIdCard())
+                        .usingJobData("error", String.valueOf(error))
+                        .storeDurably()
+                        .build();
+                scheduler.addJob(jobDetail, false);
 
-                Method method = info.getDeclaredMethod("getTime" + (i + 1));
-                LocalTime localTime = (LocalTime) method.invoke(userInfo);
+                //添加触发器
+                Method triggerMethod = info.getDeclaredMethod("getTime" + (i + 1));
+                LocalTime localTime = (LocalTime) triggerMethod.invoke(userInfo);
                 Trigger trigger1 = newTrigger()
                         .withIdentity(userInfo.getName() + "-" + userInfo.getIdCard() + "-" + i, TRIGGER_GROUP_NAME)
                         .startNow()
-                        .withSchedule(dailyAtHourAndMinute(localTime.getHour(), localTime.getMinute()))
-                        //                        .withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(30))
+                        //                        .withSchedule(dailyAtHourAndMinute(localTime.getHour(), localTime.getMinute()))
+                        .withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(30))
                         .forJob(jobDetail)
                         .build();
-                try {
-                    this.scheduler.scheduleJob(trigger1);
-                } catch (SchedulerException e) {
-                    logger.error("trigger1 启动失败！", e);
-                }
+                scheduler.scheduleJob(trigger1);
             }
+        } catch (SchedulerException e) {
+            logger.error("任务添加失败！", e);
         } catch (NoSuchMethodException e) {
-            logger.error("反射获得time失败1！", e);
+            logger.error("反射获得int失败2！", e);
         } catch (IllegalAccessException e) {
-            logger.error("反射获得time失败2！", e);
+            logger.error("反射获得int失败3！", e);
         } catch (InvocationTargetException e) {
-            logger.error("反射获得time失败3！", e);
+            logger.error("反射获得int失败4！", e);
         }
 
 
     }
+
 
 }

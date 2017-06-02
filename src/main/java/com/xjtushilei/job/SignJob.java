@@ -31,19 +31,16 @@ public class SignJob implements Job {
 
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 
-        UserInfo userInfo = new UserInfo(
-                dataMap.getString("name"),
-                dataMap.getString("idCard"),
-                dataMap.getString("email"),
-                dataMap.getInt("error"));
-        //        System.out.println(userInfo.getEmail());
+        String name = dataMap.getString("name");
+        String idCard = dataMap.getString("idCard");
+        String email = dataMap.getString("email");
+        int error = dataMap.getInt("error");
+        System.out.println(error + "：随机暂停数字");
         try {
-            //            System.out.println(signUrl);
-            TimeUnit.SECONDS.sleep(userInfo.getError());
-            System.err.println(LocalTime.now() + "Instance:" + key + " name: " + userInfo.getName() + ", email: " + userInfo
-                    .getEmail());
-            String html = restTemplate.getForObject(signUrl + "?id=" + userInfo.getIdCard(), String.class);
-            MailUtil.sendMail(userInfo.getEmail(), "[" + LocalDateTime.now() + "][" + userInfo.getName() + "]的签到提醒", html);
+            TimeUnit.SECONDS.sleep(error);
+            System.err.println(LocalTime.now() + "Instance:" + key + " name: " + name + ", email: " + email);
+            String html = restTemplate.getForObject(signUrl + "?id=" + idCard, String.class);
+            MailUtil.sendMail(email, "[" + LocalDateTime.now() + "][" + name + "]的签到提醒", html);
         } catch (InterruptedException e) {
             logger.error("延迟启动失败！", e);
         } catch (MessagingException e) {

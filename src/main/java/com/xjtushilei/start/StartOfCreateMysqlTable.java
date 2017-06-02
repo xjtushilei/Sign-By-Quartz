@@ -40,7 +40,7 @@ public class StartOfCreateMysqlTable implements CommandLineRunner {
         }
         QuartzManager.build().setUserInfo(new UserInfo("小明", "1494720355", "619983341@qq.com", LocalTime.now(), LocalTime.now(),
                 LocalTime.of(23, 33), LocalTime.of(23, 34), LocalTime.of(23, 33), LocalTime.now()
-                , 1))
+                , 1, 2, 3, 4, 5, 6))
                 .start();
         //        quartzService.addJob(new UserInfo("小2","2","2222222222@qq.com")).addTrigger(new UserInfo("小222","2222","2222222222@qq.com")).build();
         logger.info(">>>>>>>>>>>>>>>检查数据库操作结束<<<<<<<<<<<<<");
