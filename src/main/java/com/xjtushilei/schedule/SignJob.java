@@ -5,12 +5,17 @@ import com.xjtushilei.domain.AutoSignUserInfo;
 import com.xjtushilei.job.SignThread;
 import com.xjtushilei.repository.SignLogRepository;
 import com.xjtushilei.repository.UserInfoRepository;
+import com.xjtushilei.utils.MailTemplate;
+import com.xjtushilei.utils.mail.MailUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -29,15 +34,50 @@ public class SignJob {
     private SignLogRepository signLogRepository;
 
 
+    //    //    @Scheduled(fixedRate = 15000)
+    //    public void execute() {
+    //        System.out.println(LocalDateTime.now().getDayOfWeek().toString().toLowerCase());
+    //    }
+
+    @Scheduled(cron = "0 0 8 ? * SAT")
+    public void executer周报() {
+
+        //获取第几周
+        Calendar calendar = Calendar.getInstance();
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.setTime(new Date());
+
+        Date date = new Date(new Date().getYear(), new Date().getMonth(), new Date().getDate() - 6); //6
+        userInfoRepository.findAll().forEach(userinfo -> {
+
+            List<AutoSignLog> list = signLogRepository.findByEmailAndLocalDateTimeAfter(userinfo.getEmail(), date);
+
+            String jutixijie = "";
+            for (AutoSignLog log : list) {
+                jutixijie = jutixijie + log.mailString();
+            }
+            String html = MailTemplate.weekendHtml.replace("number", String.valueOf(list.size()));
+            html = html.replace("jutixijie", jutixijie);
+
+            try {
+                MailUtil.sendMail(userinfo.getEmail(),
+                        "【第" + calendar.get(Calendar.WEEK_OF_YEAR) + "周】 " + userinfo.getName() + "的自动签到周报",
+                        html);
+            } catch (MessagingException | IOException e) {
+                logger.error("邮件发送失败！", e);
+            }
+        });
+    }
+
+
     @Scheduled(cron = "0 15 8 * * ?")
     public void execute早上签到() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 10 * 60);
+            SignThread signThread = new SignThread(userInfo, 10 * 60, signLogRepository, "早晨签到");
             signThread.start();
         });
-        signLogRepository.save(new AutoSignLog(new Date(), "早晨签到", userInfoList.size()));
     }
 
     @Scheduled(cron = "0 41 11 * * ?")
@@ -45,10 +85,9 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 20 * 60);
+            SignThread signThread = new SignThread(userInfo, 20 * 60, signLogRepository, "早晨签退");
             signThread.start();
         });
-        signLogRepository.save(new AutoSignLog(new Date(), "早晨签退", userInfoList.size()));
     }
 
     @Scheduled(cron = "0 3 14 * * ?")
@@ -56,10 +95,9 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 10 * 60);
+            SignThread signThread = new SignThread(userInfo, 10 * 60, signLogRepository, "下午签到");
             signThread.start();
         });
-        signLogRepository.save(new AutoSignLog(new Date(), "下午签到", userInfoList.size()));
     }
 
 
@@ -68,10 +106,9 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 20 * 60);
+            SignThread signThread = new SignThread(userInfo, 20 * 60, signLogRepository, "下午签退");
             signThread.start();
         });
-        signLogRepository.save(new AutoSignLog(new Date(), "下午签退", userInfoList.size()));
     }
 
     @Scheduled(cron = "0 35 18 * * ?")
@@ -79,10 +116,9 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 30 * 60);
+            SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "晚上签到");
             signThread.start();
         });
-        signLogRepository.save(new AutoSignLog(new Date(), "晚上签到", userInfoList.size()));
     }
 
 
@@ -91,10 +127,9 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 30 * 60);
+            SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "晚上签退");
             signThread.start();
         });
-        signLogRepository.save(new AutoSignLog(new Date(), "晚上签退", userInfoList.size()));
     }
 
 }

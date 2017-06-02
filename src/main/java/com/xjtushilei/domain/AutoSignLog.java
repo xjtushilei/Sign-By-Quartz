@@ -18,17 +18,23 @@ public class AutoSignLog {
 
     private Date localDateTime;
 
+    private String name;
+
+    private String email;
+
     private String type;
 
-    private int sum;
-
-    public AutoSignLog(Date localDateTime, String type, int sum) {
-        this.localDateTime = localDateTime;
-        this.type = type;
-        this.sum = sum;
-    }
+    private String info;
 
     public AutoSignLog() {
+    }
+
+    public AutoSignLog(Date localDateTime, String name, String email, String type, String info) {
+        this.localDateTime = localDateTime;
+        this.name = name;
+        this.email = email;
+        this.type = type;
+        this.info = info;
     }
 
     public Long getId() {
@@ -47,6 +53,22 @@ public class AutoSignLog {
         this.localDateTime = localDateTime;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getType() {
         return type;
     }
@@ -55,12 +77,34 @@ public class AutoSignLog {
         this.type = type;
     }
 
-    public int getSum() {
-        return sum;
+    public String getInfo() {
+        return info;
     }
 
-    public void setSum(int sum) {
-        this.sum = sum;
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    @Override
+    public String toString() {
+        return "AutoSignLog{" +
+                "id=" + id +
+                ", localDateTime=" + localDateTime +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", type='" + type + '\'' +
+                ", info='" + info + '\'' +
+                '}';
+    }
+
+    public String mailString() {
+        return "<p>" +
+                "'" + localDateTime + "'" +
+                ",'" + name + "'" +
+                ", '" + email + "'" +
+                ", '" + type + "'" +
+                ", '" + info + "'" +
+                "</p>";
     }
 }
 

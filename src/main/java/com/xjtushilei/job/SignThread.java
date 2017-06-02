@@ -1,7 +1,8 @@
 package com.xjtushilei.job;
 
+import com.xjtushilei.domain.AutoSignLog;
 import com.xjtushilei.domain.AutoSignUserInfo;
-import com.xjtushilei.utils.MailTemplate;
+import com.xjtushilei.repository.SignLogRepository;
 import com.xjtushilei.utils.PropertyUtil;
 import com.xjtushilei.utils.mail.MailUtil;
 import org.jsoup.Jsoup;
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -51,12 +53,16 @@ public class SignThread extends Thread {
     private String name;
     private String idCard;
     private String email;
+    private String type;
+    private SignLogRepository signLogRepository;
 
-    public SignThread(AutoSignUserInfo userInfo, int error) {
+    public SignThread(AutoSignUserInfo userInfo, int error, SignLogRepository signLogRepository, String type) {
         this.name = userInfo.getName();
         this.idCard = userInfo.getIdCard();
         this.email = userInfo.getEmail();
         this.error = error;
+        this.signLogRepository = signLogRepository;
+        this.type = type;
 
     }
 
@@ -79,15 +85,18 @@ public class SignThread extends Thread {
             Document doc = Jsoup.parse(html);
             String state = doc.getElementById("corner").text();
             String table = "";
+            String tableText = "";
             if (state.indexOf("非法卡") != -1) {
-                state = "非法卡";
+                state = "非法卡!";
             } else {
                 state = "刷卡成功！";
                 table = doc.select("#corner > table").html();
+                tableText = doc.select("#corner > table").text();
                 table = "<table>" + table + "</table>";
             }
-            html = MailTemplate.SignHtml.replace("签到结果", state).replace("table", table);
-            MailUtil.sendMail(email, "[" + LocalDateTime.now() + "][" + name + "]的签到提醒", html);
+
+            signLogRepository.save(new AutoSignLog(new Date(), name, email, type, state + tableText));
+
         } catch (InterruptedException e) {
             logger.error("延迟启动失败！", e);
         } catch (MessagingException | IOException e) {
