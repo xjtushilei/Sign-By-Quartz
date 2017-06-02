@@ -1,6 +1,7 @@
 package com.xjtushilei.job;
 
 import com.xjtushilei.domain.AutoSignUserInfo;
+import com.xjtushilei.utils.MailTemplate;
 import com.xjtushilei.utils.PropertyUtil;
 import com.xjtushilei.utils.mail.MailUtil;
 import org.jsoup.Jsoup;
@@ -12,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,15 +23,24 @@ import java.util.concurrent.TimeUnit;
 public class SignThread extends Thread {
 
     public static void main(String[] a) throws IOException, MessagingException {
-        RestTemplate restTemplate = new RestTemplate();
-
-        String signUrl = PropertyUtil.getProperty("signurl");
-
-        String html = restTemplate.getForObject(signUrl + "?id=" + "1494720355", String.class);
-        Document doc = Jsoup.parse(html);
-        String table = doc.select("#corner > table").html();
-        //        System.out.println(table);
-        MailUtil.sendMail("619983341@qq.com", "[签到提醒", table);
+        //        RestTemplate restTemplate = new RestTemplate();
+        //
+        //        String signUrl = PropertyUtil.getProperty("signurl");
+        //
+        //        String html = restTemplate.getForObject(signUrl + "?id=" + "1494720355", String.class);
+        //        Document doc = Jsoup.parse(html);
+        //        String state=doc.getElementById("corner").text();
+        //        String table = "";
+        //        if(state.indexOf("非法卡")!=-1){
+        //            state="非法卡";
+        //        }
+        //        else {
+        //            state="刷卡成功！";
+        //            table = doc.select("#corner > table").html();
+        //            table = "<table>"+table+"</table>";
+        //        }
+        //        html = MailTemplate.SignHtml.replace("签到结果",state).replace("table",table);
+        //        MailUtil.sendMail("619983341@qq.com","123的结果",html);
 
     }
 
@@ -56,8 +67,20 @@ public class SignThread extends Thread {
         String signUrl = PropertyUtil.getProperty("signurl");
 
         try {
+            error = new Random().nextInt(error);
             TimeUnit.SECONDS.sleep(error);
             String html = restTemplate.getForObject(signUrl + "?id=" + idCard, String.class);
+            Document doc = Jsoup.parse(html);
+            String state = doc.getElementById("corner").text();
+            String table = "";
+            if (state.indexOf("非法卡") != -1) {
+                state = "非法卡";
+            } else {
+                state = "刷卡成功！";
+                table = doc.select("#corner > table").html();
+                table = "<table>" + table + "</table>";
+            }
+            html = MailTemplate.SignHtml.replace("签到结果", state).replace("table", table);
             MailUtil.sendMail(email, "[" + LocalDateTime.now() + "][" + name + "]的签到提醒", html);
         } catch (InterruptedException e) {
             logger.error("延迟启动失败！", e);
@@ -66,7 +89,6 @@ public class SignThread extends Thread {
         } catch (IOException e) {
             logger.error("读取邮件配置失败！", e);
         }
-
     }
 
 }

@@ -28,6 +28,7 @@ public class SignJob {
     @Autowired
     private SignLogRepository signLogRepository;
 
+
     @Scheduled(cron = "0 15 8 * * ?")
     public void execute早上签到() {
 

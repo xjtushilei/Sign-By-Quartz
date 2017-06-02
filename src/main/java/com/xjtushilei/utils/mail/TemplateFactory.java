@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.templateresolver.TemplateResolver;
 
 import java.util.Map;
 
@@ -15,6 +16,18 @@ public class TemplateFactory {
 
     // 模板生成配置
     private static TemplateEngine templateEngine = new TemplateEngine();
+
+    static {
+        TemplateResolver templateResolver = new TemplateResolver();
+        templateResolver.setTemplateMode("HTML5");
+        // 设置模板的前置路径
+        templateResolver.setPrefix("classpath:/templates/");
+        //设置模板统一的后缀名
+        templateResolver.setSuffix(".html");
+        templateResolver.setCacheTTLMs(Long.valueOf(3600000L));
+        templateResolver.setCacheable(true);
+        templateEngine.setTemplateResolver(templateResolver);
+    }
 
 
     public static String generateHtmlFromFtl(String templateName, Map<String, String> model) {

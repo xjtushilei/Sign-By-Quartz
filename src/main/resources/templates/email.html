@@ -3,10 +3,10 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>签到</title>
+    <meta charset="UTF-8"/>
 </head>
-<body>
-<h1 th:inline="text">Hello.v.2</h1>
-<!--/*@thymesVar id="username" type="java.lang.String"*/-->
-<p th:text="Hello,  + ${username} +  with thymeleaf !"/> <br/>
+<body style="text-align: center">
+<h1 th:inline="text" onclick="" th:text="${state}">签到结果</h1>
+<div th:utext="${table}"></div>
 </body>
 </html>
