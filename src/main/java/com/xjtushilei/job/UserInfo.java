@@ -1,12 +1,15 @@
 package com.xjtushilei.job;
 
+import javax.persistence.Entity;
 import java.time.LocalTime;
 
 /**
  * @author shilei
  * @Date 2017/5/31.
  */
+@Entity
 public class UserInfo {
+
 
     private String name;
 
