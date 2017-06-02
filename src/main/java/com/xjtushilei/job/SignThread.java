@@ -1,8 +1,10 @@
 package com.xjtushilei.job;
 
+import com.xjtushilei.domain.AutoSignUserInfo;
 import com.xjtushilei.utils.PropertyUtil;
 import com.xjtushilei.utils.mail.MailUtil;
-import org.quartz.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
@@ -10,35 +12,51 @@ import org.springframework.web.client.RestTemplate;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author shilei
  * @Date 2017/5/31.
  */
-public class SignJob implements Job {
+public class SignThread extends Thread {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-
+    public static void main(String[] a) throws IOException, MessagingException {
         RestTemplate restTemplate = new RestTemplate();
 
         String signUrl = PropertyUtil.getProperty("signurl");
-        JobKey key = context.getJobDetail().getKey();
 
-        JobDataMap dataMap = context.getJobDetail().getJobDataMap();
+        String html = restTemplate.getForObject(signUrl + "?id=" + "1494720355", String.class);
+        Document doc = Jsoup.parse(html);
+        String table = doc.select("#corner > table").html();
+        //        System.out.println(table);
+        MailUtil.sendMail("619983341@qq.com", "[签到提醒", table);
 
-        String name = dataMap.getString("name");
-        String idCard = dataMap.getString("idCard");
-        String email = dataMap.getString("email");
-        int error = dataMap.getInt("error");
-        System.out.println(error + "：随机暂停数字");
+    }
+
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private int error;
+    private String name;
+    private String idCard;
+    private String email;
+
+    public SignThread(AutoSignUserInfo userInfo, int error) {
+        this.name = userInfo.getName();
+        this.idCard = userInfo.getIdCard();
+        this.email = userInfo.getEmail();
+        this.error = error;
+
+    }
+
+    @Override
+    public void run() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String signUrl = PropertyUtil.getProperty("signurl");
+
         try {
             TimeUnit.SECONDS.sleep(error);
-            System.err.println(LocalTime.now() + "Instance:" + key + " name: " + name + ", email: " + email);
             String html = restTemplate.getForObject(signUrl + "?id=" + idCard, String.class);
             MailUtil.sendMail(email, "[" + LocalDateTime.now() + "][" + name + "]的签到提醒", html);
         } catch (InterruptedException e) {
@@ -50,4 +68,5 @@ public class SignJob implements Job {
         }
 
     }
+
 }
