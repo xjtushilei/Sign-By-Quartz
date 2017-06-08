@@ -34,10 +34,20 @@ public class SignJob {
     private SignLogRepository signLogRepository;
 
 
-    //    //    @Scheduled(fixedRate = 15000)
-    //    public void execute() {
-    //        System.out.println(LocalDateTime.now().getDayOfWeek().toString().toLowerCase());
-    //    }
+    @Scheduled(cron = "0 10 20 5 * ?")
+    public void execute() {
+
+        userInfoRepository.findAll().forEach(userinfo -> {
+            String html = MailTemplate.tongzhiHtml.replace("weizhideyoujian", userinfo.getEmail());
+            try {
+                MailUtil.sendMail(userinfo.getEmail(),
+                        "【自动签到系统】的【自助查询】",
+                        html);
+            } catch (MessagingException | IOException e) {
+                logger.error("邮件发送失败！", e);
+            }
+        });
+    }
 
     @Scheduled(cron = "0 0 8 ? * SAT")
     public void executer周报() {
@@ -70,12 +80,12 @@ public class SignJob {
     }
 
 
-    @Scheduled(cron = "0 15 8 * * ?")
+    @Scheduled(cron = "0 10 8 * * ?")
     public void execute早上签到() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 10 * 60, signLogRepository, "早晨签到");
+            SignThread signThread = new SignThread(userInfo, 15 * 60, signLogRepository, "早晨签到");
             signThread.start();
         });
     }
@@ -85,17 +95,17 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 20 * 60, signLogRepository, "早晨签退");
+            SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "早晨签退");
             signThread.start();
         });
     }
 
-    @Scheduled(cron = "0 3 14 * * ?")
+    @Scheduled(cron = "0 0 14 * * ?")
     public void execute下午签到() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 10 * 60, signLogRepository, "下午签到");
+            SignThread signThread = new SignThread(userInfo, 15 * 60, signLogRepository, "下午签到");
             signThread.start();
         });
     }
@@ -106,7 +116,7 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 20 * 60, signLogRepository, "下午签退");
+            SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "下午签退");
             signThread.start();
         });
     }

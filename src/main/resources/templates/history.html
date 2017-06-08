@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>签到查询</title>
+    <meta charset="UTF-8"/>
+
+</head>
+<body style="text-align: center">
+<h1 th:inline="text"><span th:text="${email}"> </span> 最近的300条记录</h1>
+<table border="1" cellspacing="1" cellpadding="0">
+    <tr>
+        <th>时间</th>
+        <th>姓名</th>
+        <th>email</th>
+        <th>类型</th>
+        <th>info</th>
+    </tr>
+    <!--/*@thymesVar id="log" type="com.xjtushilei.domain.AutoSignLog"*/-->
+    <tr th:each="log : ${list}">
+        <td th:text="${log.localDateTime}"></td>
+        <td th:text="${log.name}"></td>
+        <td th:text="${log.email}"></td>
+        <td th:text="${log.type}"></td>
+        <td th:text="${log.info}"></td>
+    </tr>
+</table>
+</body>
+</html>
