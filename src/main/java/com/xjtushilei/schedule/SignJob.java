@@ -34,20 +34,20 @@ public class SignJob {
     private SignLogRepository signLogRepository;
 
 
-    @Scheduled(cron = "0 10 20 5 * ?")
-    public void execute() {
-
-        userInfoRepository.findAll().forEach(userinfo -> {
-            String html = MailTemplate.tongzhiHtml.replace("weizhideyoujian", userinfo.getEmail());
-            try {
-                MailUtil.sendMail(userinfo.getEmail(),
-                        "【自动签到系统】的【自助查询】",
-                        html);
-            } catch (MessagingException | IOException e) {
-                logger.error("邮件发送失败！", e);
-            }
-        });
-    }
+    //    @Scheduled(cron = "0 10 3 1 * ?")
+    //    public void execute() {
+    //
+    //        userInfoRepository.findAll().forEach(userinfo -> {
+    //            String html = MailTemplate.tongzhiHtml.replace("weizhideyoujian", userinfo.getEmail());
+    //            try {
+    //                MailUtil.sendMail(userinfo.getEmail(),
+    //                        "【自动签到系统】的【自助查询】",
+    //                        html);
+    //            } catch (MessagingException | IOException e) {
+    //                logger.error("邮件发送失败！", e);
+    //            }
+    //        });
+    //    }
 
     @Scheduled(cron = "0 0 8 ? * SAT")
     public void executer周报() {
@@ -68,6 +68,7 @@ public class SignJob {
             }
             String html = MailTemplate.weekendHtml.replace("number", String.valueOf(list.size()));
             html = html.replace("jutixijie", jutixijie);
+            html = html.replace("weizhideyoujian", userinfo.getEmail());
 
             try {
                 MailUtil.sendMail(userinfo.getEmail(),
