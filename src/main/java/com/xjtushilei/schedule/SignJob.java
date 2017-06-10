@@ -57,7 +57,7 @@ public class SignJob {
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
         calendar.setTime(new Date());
 
-        Date date = new Date(new Date().getYear(), new Date().getMonth(), new Date().getDate() - 6); //6
+        Date date = new Date(new Date().getYear(), new Date().getMonth(), new Date().getDate() - 5); //6
         userInfoRepository.findAll().forEach(userinfo -> {
 
             List<AutoSignLog> list = signLogRepository.findByEmailAndLocalDateTimeAfter(userinfo.getEmail(), date);
