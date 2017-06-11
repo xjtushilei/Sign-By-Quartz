@@ -81,17 +81,17 @@ public class SignJob {
     }
 
 
-    @Scheduled(cron = "0 10 8 * * ?")
+    @Scheduled(cron = "0 0 8 ? * MON-FRI")
     public void execute早上签到() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 15 * 60, signLogRepository, "早晨签到");
+            SignThread signThread = new SignThread(userInfo, 25 * 60, signLogRepository, "早晨签到");
             signThread.start();
         });
     }
 
-    @Scheduled(cron = "0 41 11 * * ?")
+    @Scheduled(cron = "0 0 12 ? * MON-FRI")
     public void execute早上签退() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
@@ -101,18 +101,18 @@ public class SignJob {
         });
     }
 
-    @Scheduled(cron = "0 0 14 * * ?")
+    @Scheduled(cron = "0 50 13 ? * MON-FRI")
     public void execute下午签到() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 15 * 60, signLogRepository, "下午签到");
+            SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "下午签到");
             signThread.start();
         });
     }
 
 
-    @Scheduled(cron = "0 41 17 * * ?")
+    @Scheduled(cron = "0 0 18 ? * MON-FRI")
     public void execute下午签退() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
@@ -122,7 +122,7 @@ public class SignJob {
         });
     }
 
-    @Scheduled(cron = "0 35 18 * * ?")
+    @Scheduled(cron = "0 35 18 ? * MON-FRI")
     public void execute晚上签到() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
@@ -133,7 +133,7 @@ public class SignJob {
     }
 
 
-    @Scheduled(cron = "0 10 22 * * ?")
+    @Scheduled(cron = "0 10 22 ? * MON-FRI")
     public void execute晚上签退() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
