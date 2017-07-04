@@ -94,7 +94,8 @@ public class SignThread extends Thread {
             }
             boolean success = JsonPath.read(html, "$.success");
             String message = JsonPath.read(html, "$.message");
-            signLogRepository.save(new AutoSignLog(new Date(), name, email, type, success + "!  " + message));
+            signLogRepository.save(new AutoSignLog(new Date(), name, email, type, "(新版系统)" + success + "!  " +
+                    message));
 
         } catch (InterruptedException e) {
             logger.error("延迟启动失败！", e);
