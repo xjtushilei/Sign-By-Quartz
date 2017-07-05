@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.xjtushilei</groupId>
-    <artifactId>sign-by-quartz</artifactId>
+    <artifactId>autoSign-by-quartz</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>sign-by-quartz</name>
+    <name>autoSign-by-quartz</name>
     <description>自动定时签到系统</description>
 
     <parent>

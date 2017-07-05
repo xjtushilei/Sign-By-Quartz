@@ -34,18 +34,15 @@ public class SignJob {
     private SignLogRepository signLogRepository;
 
 
-    //    @Scheduled(cron = "0 10 3 1 * ?")
-    //    public void execute() {
+    //    @Scheduled(fixedRate = 5000)
+    //    public void test() {
     //
-    //        userInfoRepository.findAll().forEach(userinfo -> {
-    //            String html = MailTemplate.tongzhiHtml.replace("weizhideyoujian", userinfo.getEmail());
-    //            try {
-    //                MailUtil.sendMail(userinfo.getEmail(),
-    //                        "【自动签到系统】的【自助查询】",
-    //                        html);
-    //            } catch (MessagingException | IOException e) {
-    //                logger.error("邮件发送失败！", e);
-    //            }
+    //        userInfoRepository.findByAutoSignIsTrue().forEach(userinfo -> {
+    //            System.out.println("findByAutoSignIsTrue:"+userinfo);
+    //        });
+    //
+    //        userInfoRepository.findBySendEmailIsTrue().forEach(userinfo -> {
+    //            System.out.println("findBySendEmailIsTrue:"+userinfo);
     //        });
     //    }
 
@@ -58,7 +55,7 @@ public class SignJob {
         calendar.setTime(new Date());
 
         Date date = new Date(new Date().getYear(), new Date().getMonth(), new Date().getDate() - 5); //6
-        userInfoRepository.findAll().forEach(userinfo -> {
+        userInfoRepository.findBySendEmailIsTrue().forEach(userinfo -> {
 
             List<AutoSignLog> list = signLogRepository.findByEmailAndLocalDateTimeAfter(userinfo.getEmail(), date);
 
@@ -84,7 +81,7 @@ public class SignJob {
     @Scheduled(cron = "0 15 8 ? * MON-FRI")
     public void execute早上签到() {
 
-        List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
+        List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
             SignThread signThread = new SignThread(userInfo, 10 * 60, signLogRepository, "早晨签到");
             signThread.start();
@@ -94,7 +91,7 @@ public class SignJob {
     @Scheduled(cron = "0 42 11 ? * MON-FRI")
     public void execute早上签退() {
 
-        List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
+        List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
             SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "早晨签退");
             signThread.start();
@@ -104,7 +101,7 @@ public class SignJob {
     @Scheduled(cron = "0 59 13 ? * MON-FRI")
     public void execute下午签到() {
 
-        List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
+        List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
             SignThread signThread = new SignThread(userInfo, 16 * 60, signLogRepository, "下午签到");
             signThread.start();
@@ -112,20 +109,20 @@ public class SignJob {
     }
 
 
-    @Scheduled(cron = "0 0 18 ? * MON-FRI")
+    @Scheduled(cron = "0 45 17 ? * MON-FRI")
     public void execute下午签退() {
 
-        List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
+        List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
             SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "下午签退");
             signThread.start();
         });
     }
 
-    @Scheduled(cron = "0 35 18 ? * MON-FRI")
+    @Scheduled(cron = "0 50 18 ? * MON-FRI")
     public void execute晚上签到() {
 
-        List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
+        List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
             SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "晚上签到");
             signThread.start();
@@ -136,7 +133,7 @@ public class SignJob {
     @Scheduled(cron = "0 11 22 ? * MON-FRI")
     public void execute晚上签退() {
 
-        List<AutoSignUserInfo> userInfoList = userInfoRepository.findAll();
+        List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
             SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "晚上签退");
             signThread.start();

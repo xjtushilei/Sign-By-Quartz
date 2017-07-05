@@ -21,6 +21,17 @@ public class AutoSignUserInfo {
 
     private String email;
 
+    private boolean sendEmail = false;
+
+    private boolean autoSign = true;
+
+    public AutoSignUserInfo(String name, String idCard, String email, boolean sendEmail, boolean autoSign) {
+        this.name = name;
+        this.idCard = idCard;
+        this.email = email;
+        this.sendEmail = sendEmail;
+        this.autoSign = autoSign;
+    }
 
     public AutoSignUserInfo() {
     }
@@ -55,6 +66,34 @@ public class AutoSignUserInfo {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isSendEmail() {
+        return sendEmail;
+    }
+
+    public void setSendEmail(boolean sendEmail) {
+        this.sendEmail = sendEmail;
+    }
+
+    public boolean isAutoSign() {
+        return autoSign;
+    }
+
+    public void setAutoSign(boolean autoSign) {
+        this.autoSign = autoSign;
+    }
+
+    @Override
+    public String toString() {
+        return "AutoSignUserInfo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", idCard='" + idCard + '\'' +
+                ", email='" + email + '\'' +
+                ", sendEmail=" + sendEmail +
+                ", autoSign=" + autoSign +
+                '}';
     }
 }
 
