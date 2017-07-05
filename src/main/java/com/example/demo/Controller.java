@@ -24,10 +24,9 @@ import java.util.List;
 public class Controller {
 
     @RequestMapping("sign")
-    public String endpoint(@RequestParam String id){
+    public String endpoint(@RequestParam String id) {
         return get(id);
     }
-
 
 
     public static String get(String id) {
@@ -37,26 +36,40 @@ public class Controller {
         // get method
         HttpPost httpPost = new HttpPost("http://checkin.9lou.org/signin");
 
+        httpPost.addHeader("Accept", "*/*");
+        httpPost.addHeader("Accept-Encoding", "zh-CN,zh;q=0.8,gl;q=0.6");
+        httpPost.addHeader("Connection", "keep-alive");
+        httpPost.addHeader("Content-Length", "12");
+        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        httpPost.addHeader("Host", "checkin.9lou.org");
+        httpPost.addHeader("Origin", "http://checkin.9lou.org");
+        httpPost.addHeader("Referer", "http://checkin.9lou.org/signin");
+        httpPost.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
+        httpPost.addHeader("X-Requested-With", "XMLHttpRequest");
+
         //set params
         List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("id",id));
-        try{
+        params.add(new BasicNameValuePair("id", id));
+        try {
             httpPost.setEntity(new UrlEncodedFormEntity(params));
-        }catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         //response
         HttpResponse response = null;
-        try{
+        try {
             response = httpClient.execute(httpPost);
-        }catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         //get response into String
-        String temp="";
-        try{
+        String temp = "";
+        try {
             HttpEntity entity = response.getEntity();
-            temp= EntityUtils.toString(entity,"utf-8");
-        }catch (Exception e) {}
-        temp=unicodeToUtf8(temp);
+            temp = EntityUtils.toString(entity, "utf-8");
+        } catch (Exception e) {
+        }
+        temp = unicodeToUtf8(temp);
         return temp;
     }
 
@@ -64,7 +77,7 @@ public class Controller {
         char aChar;
         int len = theString.length();
         StringBuffer outBuffer = new StringBuffer(len);
-        for (int x = 0; x < len;) {
+        for (int x = 0; x < len; ) {
             aChar = theString.charAt(x++);
             if (aChar == '\\') {
                 aChar = theString.charAt(x++);
