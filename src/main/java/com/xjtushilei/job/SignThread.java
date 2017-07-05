@@ -5,8 +5,6 @@ import com.xjtushilei.domain.AutoSignUserInfo;
 import com.xjtushilei.repository.SignLogRepository;
 import com.xjtushilei.utils.PropertyUtil;
 import com.xjtushilei.utils.mail.MailUtil;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
@@ -82,20 +80,7 @@ public class SignThread extends Thread {
                 html = "<h1>大概率是因为教研室那个刷卡电脑没网或那个电脑坏了或者9楼服务器停网了。</h1>";
                 MailUtil.sendMail(email, "[" + LocalDateTime.now() + "][" + name + "]签到【失败】！！！", html);
             }
-            Document doc = Jsoup.parse(html);
-            String state = doc.getElementById("corner").text();
-            String table = "";
-            String tableText = "";
-            if (state.indexOf("非法卡") != -1) {
-                state = "非法卡!";
-            } else {
-                state = "刷卡成功！";
-                table = doc.select("#corner > table").html();
-                tableText = doc.select("#corner > table").text();
-                table = "<table>" + table + "</table>";
-            }
-
-            signLogRepository.save(new AutoSignLog(new Date(), name, email, type, state + tableText));
+            signLogRepository.save(new AutoSignLog(new Date(), name, email, type, html));
 
         } catch (InterruptedException e) {
             logger.error("延迟启动失败！", e);

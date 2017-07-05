@@ -2,6 +2,7 @@ package com.xjtushilei.controller;
 
 import com.xjtushilei.domain.AutoSignLog;
 import com.xjtushilei.repository.SignLogRepository;
+import com.xjtushilei.utils.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -37,4 +39,13 @@ public class SignLog {
         model.addAttribute("email", email);
         return "history";
     }
+
+    @RequestMapping("/zhuanfa")
+    public String zhuanfa(String id) {
+        String signUrl = PropertyUtil.getProperty("signurl");
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.getForObject(signUrl + "?id=" + id, String.class);
+        return result;
+    }
+
 }
