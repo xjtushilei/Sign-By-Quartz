@@ -29,23 +29,19 @@ public class Controller {
     }
 
 
+    @RequestMapping("hello")
+    public String hello() {
+        return "hello";
+    }
+
+
+
     public static String get(String id) {
         //httpClient
         HttpClient httpClient = new DefaultHttpClient();
 
         // get method
         HttpPost httpPost = new HttpPost("http://checkin.9lou.org/signin");
-
-        httpPost.addHeader("Accept", "*/*");
-        httpPost.addHeader("Accept-Encoding", "zh-CN,zh;q=0.8,gl;q=0.6");
-        httpPost.addHeader("Connection", "keep-alive");
-        httpPost.addHeader("Content-Length", "12");
-        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-        httpPost.addHeader("Host", "checkin.9lou.org");
-        httpPost.addHeader("Origin", "http://checkin.9lou.org");
-        httpPost.addHeader("Referer", "http://checkin.9lou.org/signin");
-        httpPost.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
-        httpPost.addHeader("X-Requested-With", "XMLHttpRequest");
 
         //set params
         List<NameValuePair> params = new ArrayList<NameValuePair>();
