@@ -4,14 +4,12 @@ import com.xjtushilei.domain.AutoSignLog;
 import com.xjtushilei.domain.AutoSignUserInfo;
 import com.xjtushilei.repository.SignLogRepository;
 import com.xjtushilei.utils.PropertyUtil;
-import com.xjtushilei.utils.mail.MailUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -66,14 +64,11 @@ public class SignThread extends Thread {
                 html = restTemplate.getForObject(signUrl + "?id=" + idCard, String.class);
             } catch (Exception e) {
                 html = "<h1>大概率是因为教研室那个刷卡电脑没网或那个电脑坏了或者9楼服务器停网了。</h1>";
-                MailUtil.sendMail(email, "[" + LocalDateTime.now() + "][" + name + "]签到【失败】！！！", html);
             }
             signLogRepository.save(new AutoSignLog(new Date(), name, email, type, html));
 
         } catch (InterruptedException e) {
             logger.error("延迟启动失败！", e);
-        } catch (MessagingException | IOException e) {
-            logger.error("邮件发送失败！", e);
         }
     }
 
