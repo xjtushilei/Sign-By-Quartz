@@ -29,6 +29,8 @@ public class SignLog {
 
         List<AutoSignLog> list;
         if (email.equals("All")) {
+            return "error1";
+        } else if (email.equals("all")) {
             list = signLogRepository.findALlLog(new PageRequest(0, 300));
         } else {
             list = signLogRepository.findByEmail(new PageRequest(0, 300), email);
