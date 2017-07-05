@@ -23,24 +23,12 @@ import java.util.concurrent.TimeUnit;
 public class SignThread extends Thread {
 
     public static void main(String[] a) throws IOException, MessagingException {
-        //        RestTemplate restTemplate = new RestTemplate();
-        //
-        //        String signUrl = PropertyUtil.getProperty("signurl");
-        //
-        //        String html = restTemplate.getForObject(signUrl + "?id=" + "1494720355", String.class);
-        //        Document doc = Jsoup.parse(html);
-        //        String state=doc.getElementById("corner").text();
-        //        String table = "";
-        //        if(state.indexOf("非法卡")!=-1){
-        //            state="非法卡";
-        //        }
-        //        else {
-        //            state="刷卡成功！";
-        //            table = doc.select("#corner > table").html();
-        //            table = "<table>"+table+"</table>";
-        //        }
-        //        html = MailTemplate.SignHtml.replace("签到结果",state).replace("table",table);
-        //        MailUtil.sendMail("619983341@qq.com","123的结果",html);
+        RestTemplate restTemplate = new RestTemplate();
+
+        String signUrl = PropertyUtil.getProperty("signurl");
+
+        String html = restTemplate.getForObject(signUrl + "?id=" + "1494720355", String.class);
+        System.out.println(html);
 
     }
 
