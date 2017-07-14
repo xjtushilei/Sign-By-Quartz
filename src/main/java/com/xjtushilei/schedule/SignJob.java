@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author shilei
@@ -32,6 +33,9 @@ public class SignJob {
 
     @Autowired
     private SignLogRepository signLogRepository;
+
+    private Random random = new Random(System.nanoTime());
+
 
 
     //    @Scheduled(fixedRate = 5000)
@@ -78,12 +82,12 @@ public class SignJob {
     }
 
 
-    @Scheduled(cron = "0 15 8 ? * MON-FRI")
+    @Scheduled(cron = "0 10 8 ? * MON-FRI")
     public void execute早上签到() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 10 * 60, signLogRepository, "早晨签到");
+            SignThread signThread = new SignThread(userInfo, 17, signLogRepository, "早晨签到", random);
             signThread.start();
         });
     }
@@ -93,7 +97,7 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "早晨签退");
+            SignThread signThread = new SignThread(userInfo, 40, signLogRepository, "早晨签退", random);
             signThread.start();
         });
     }
@@ -103,7 +107,7 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 16 * 60, signLogRepository, "下午签到");
+            SignThread signThread = new SignThread(userInfo, 16, signLogRepository, "下午签到", random);
             signThread.start();
         });
     }
@@ -114,7 +118,7 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "下午签退");
+            SignThread signThread = new SignThread(userInfo, 30, signLogRepository, "下午签退", random);
             signThread.start();
         });
     }
@@ -124,7 +128,7 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "晚上签到");
+            SignThread signThread = new SignThread(userInfo, 30, signLogRepository, "晚上签到", random);
             signThread.start();
         });
     }
@@ -135,7 +139,7 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 30 * 60, signLogRepository, "晚上签退");
+            SignThread signThread = new SignThread(userInfo, 40, signLogRepository, "晚上签退", random);
             signThread.start();
         });
     }

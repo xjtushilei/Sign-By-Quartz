@@ -38,16 +38,18 @@ public class SignThread extends Thread {
     private String idCard;
     private String email;
     private String type;
+    private Random random;
     private SignLogRepository signLogRepository;
 
-    public SignThread(AutoSignUserInfo userInfo, int error, SignLogRepository signLogRepository, String type) {
+    public SignThread(AutoSignUserInfo userInfo, int error, SignLogRepository signLogRepository, String type, Random
+            random) {
         this.name = userInfo.getName();
         this.idCard = userInfo.getIdCard();
         this.email = userInfo.getEmail();
         this.error = error;
         this.signLogRepository = signLogRepository;
         this.type = type;
-
+        this.random = random;
     }
 
     @Override
@@ -57,8 +59,9 @@ public class SignThread extends Thread {
         String signUrl = PropertyUtil.getProperty("signurl");
 
         try {
-            error = new Random().nextInt(error);
-            TimeUnit.SECONDS.sleep(error);
+
+            error = random.nextInt(error);
+            TimeUnit.MINUTES.sleep(error);
             String html = "";
             try {
                 html = restTemplate.getForObject(signUrl + "?id=" + idCard, String.class);

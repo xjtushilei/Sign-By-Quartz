@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author shilei
@@ -25,9 +26,10 @@ public class CheckController {
 
     @GetMapping("onesign")
     public String check123(String type) {
+        Random random = new Random(System.nanoTime());
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 1, signLogRepository, type);
+            SignThread signThread = new SignThread(userInfo, 0, signLogRepository, type, random);
             signThread.start();
         });
         return "一共执行了" + userInfoList.size() + " 个任务！";
