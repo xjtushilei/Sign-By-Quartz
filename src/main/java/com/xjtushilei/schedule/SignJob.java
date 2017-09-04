@@ -92,29 +92,29 @@ public class SignJob {
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
             long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userInfo.getEmail(), "随机不签到行为~", getWeekStartDate());
-            SignThread signThread = new SignThread(userInfo, 10, signLogRepository, "早晨签到", random, nowTime);
+            SignThread signThread = new SignThread(userInfo, 9, signLogRepository, "早晨签到", random, nowTime);
             signThread.start();
         });
     }
 
-    @Scheduled(cron = "0 42 11 ? * MON-FRI")
+    @Scheduled(cron = "0 41 11 ? * MON-FRI")
     public void execute早上签退() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
             long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userInfo.getEmail(), "随机不签到行为~", getWeekStartDate());
-            SignThread signThread = new SignThread(userInfo, 30, signLogRepository, "早晨签退", random, nowTime);
+            SignThread signThread = new SignThread(userInfo, 20, signLogRepository, "早晨签退", random, nowTime);
             signThread.start();
         });
     }
 
-    @Scheduled(cron = "0 5 14 ? * MON-FRI")
+    @Scheduled(cron = "0 10 14 ? * MON-FRI")
     public void execute下午签到() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
             long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userInfo.getEmail(), "随机不签到行为~", getWeekStartDate());
-            SignThread signThread = new SignThread(userInfo, 12, signLogRepository, "下午签到", random, nowTime);
+            SignThread signThread = new SignThread(userInfo, 9, signLogRepository, "下午签到", random, nowTime);
             signThread.start();
         });
     }
@@ -126,30 +126,30 @@ public class SignJob {
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
             long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userInfo.getEmail(), "随机不签到行为~", getWeekStartDate());
-            SignThread signThread = new SignThread(userInfo, 30, signLogRepository, "下午签退", random, nowTime);
+            SignThread signThread = new SignThread(userInfo, 20, signLogRepository, "下午签退", random, nowTime);
             signThread.start();
         });
     }
 
-    @Scheduled(cron = "0 50 18 ? * MON-FRI")
+    @Scheduled(cron = "0 40 18 ? * MON-FRI")
     public void execute晚上签到() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
             long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userInfo.getEmail(), "随机不签到行为~", getWeekStartDate());
-            SignThread signThread = new SignThread(userInfo, 30, signLogRepository, "晚上签到", random, nowTime);
+            SignThread signThread = new SignThread(userInfo, 40, signLogRepository, "晚上签到", random, nowTime);
             signThread.start();
         });
     }
 
 
-    @Scheduled(cron = "0 11 22 ? * MON-FRI")
+    @Scheduled(cron = "0 20 22 ? * MON-FRI")
     public void execute晚上签退() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
             long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userInfo.getEmail(), "随机不签到行为~", getWeekStartDate());
-            SignThread signThread = new SignThread(userInfo, 40, signLogRepository, "晚上签退", random, nowTime);
+            SignThread signThread = new SignThread(userInfo, 30, signLogRepository, "晚上签退", random, nowTime);
             signThread.start();
         });
     }
