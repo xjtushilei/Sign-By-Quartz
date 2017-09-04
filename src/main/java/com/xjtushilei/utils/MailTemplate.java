@@ -28,6 +28,7 @@ public class MailTemplate {
             "<h1>本周签到汇总</h1>\n" +
             "<h4>自助查询网址：http://check.xjtushilei.com/log?email=weizhideyoujian    最后是你的email</h4>\n" +
             "<h3>共计 : number 次 </h3>\n" +
+            "<h3>故意随机不打卡 : guyinumber 次 </h3>\n" +
             "<h2>具体细节：</h2>\n" +
             "<div> jutixijie</div>\n" +
             "</body>\n" +

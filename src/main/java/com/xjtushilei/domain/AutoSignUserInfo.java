@@ -21,14 +21,25 @@ public class AutoSignUserInfo {
 
     private String email;
 
+    private String grade;
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
     private boolean sendEmail = false;
 
     private boolean autoSign = true;
 
-    public AutoSignUserInfo(String name, String idCard, String email, boolean sendEmail, boolean autoSign) {
+    public AutoSignUserInfo(String name, String idCard, String email, String grade, boolean sendEmail, boolean autoSign) {
         this.name = name;
         this.idCard = idCard;
         this.email = email;
+        this.grade = grade;
         this.sendEmail = sendEmail;
         this.autoSign = autoSign;
     }
@@ -91,6 +102,7 @@ public class AutoSignUserInfo {
                 ", name='" + name + '\'' +
                 ", idCard='" + idCard + '\'' +
                 ", email='" + email + '\'' +
+                ", grade='" + grade + '\'' +
                 ", sendEmail=" + sendEmail +
                 ", autoSign=" + autoSign +
                 '}';

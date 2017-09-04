@@ -29,7 +29,7 @@ public class CheckController {
         Random random = new Random(System.nanoTime());
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 0, signLogRepository, type, random);
+            SignThread signThread = new SignThread(userInfo, 0, signLogRepository, type, random, 30);
             signThread.start();
         });
         return "一共执行了" + userInfoList.size() + " 个任务！";

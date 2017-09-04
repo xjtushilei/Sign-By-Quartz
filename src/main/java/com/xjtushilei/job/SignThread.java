@@ -39,13 +39,17 @@ public class SignThread extends Thread {
     private String email;
     private String type;
     private Random random;
+    private long nowTime;
+    private String grade;
     private SignLogRepository signLogRepository;
 
     public SignThread(AutoSignUserInfo userInfo, int error, SignLogRepository signLogRepository, String type, Random
-            random) {
+            random, long nowTime) {
         this.name = userInfo.getName();
         this.idCard = userInfo.getIdCard();
         this.email = userInfo.getEmail();
+        this.grade = userInfo.getGrade();
+        this.nowTime = nowTime;
         this.error = error;
         this.signLogRepository = signLogRepository;
         this.type = type;
@@ -63,16 +67,45 @@ public class SignThread extends Thread {
             error = random.nextInt(error);
             TimeUnit.MINUTES.sleep(error);
             String html = "";
-            try {
-                html = restTemplate.getForObject(signUrl + "?id=" + idCard, String.class);
-            } catch (Exception e) {
-                html = "<h1>大概率是因为教研室那个刷卡电脑没网或那个电脑坏了或者9楼服务器停网了。</h1>";
+
+
+            if (isRandomPass(this)) {
+                html = "随机不签到行为~";
+            } else {
+                try {
+                    html = restTemplate.getForObject(signUrl + "?id=" + idCard, String.class);
+                } catch (Exception e) {
+                    html = "<h1>大概率是因为教研室那个刷卡电脑没网或那个电脑坏了或者9楼服务器停网了。</h1>";
+                }
             }
             signLogRepository.save(new AutoSignLog(new Date(), name, email, type, html));
 
         } catch (InterruptedException e) {
             logger.error("延迟启动失败！", e);
         }
+    }
+
+    public static boolean isRandomPass(SignThread signThread) {
+        long maxLossOf1 = 20;
+        long maxLossOf2 = 6;
+        long maxLossOf3 = 12;
+        long maxLoss = 0;
+        if (signThread.grade.equals("1")) {
+            maxLoss = maxLossOf1;
+        } else if (signThread.grade.equals("2")) {
+            maxLoss = maxLossOf2;
+        } else if (signThread.grade.equals("3")) {
+            maxLoss = maxLossOf3;
+        }
+
+        if (signThread.nowTime >= maxLoss) {
+            return false;
+        } else if (signThread.random.nextInt(100) >= 80) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
 }

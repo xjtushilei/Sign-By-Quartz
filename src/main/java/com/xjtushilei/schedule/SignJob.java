@@ -71,6 +71,10 @@ public class SignJob {
             html = html.replace("jutixijie", jutixijie);
             html = html.replace("weizhideyoujian", userinfo.getEmail());
 
+            long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userinfo.getEmail(), "随机不签到行为~", getWeekStartDate());
+
+            html = html.replace("guyinumber", nowTime + "");
+
             try {
                 MailUtil.sendMail(userinfo.getEmail(),
                         "【第" + calendar.get(Calendar.WEEK_OF_YEAR) + "周】 " + userinfo.getName() + "的自动签到周报",
@@ -82,12 +86,13 @@ public class SignJob {
     }
 
 
-    @Scheduled(cron = "0 10 8 ? * MON-FRI")
+    @Scheduled(cron = "0 20 8 ? * MON-FRI")
     public void execute早上签到() {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 17, signLogRepository, "早晨签到", random);
+            long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userInfo.getEmail(), "随机不签到行为~", getWeekStartDate());
+            SignThread signThread = new SignThread(userInfo, 10, signLogRepository, "早晨签到", random, nowTime);
             signThread.start();
         });
     }
@@ -97,7 +102,8 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 40, signLogRepository, "早晨签退", random);
+            long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userInfo.getEmail(), "随机不签到行为~", getWeekStartDate());
+            SignThread signThread = new SignThread(userInfo, 30, signLogRepository, "早晨签退", random, nowTime);
             signThread.start();
         });
     }
@@ -107,7 +113,8 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 12, signLogRepository, "下午签到", random);
+            long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userInfo.getEmail(), "随机不签到行为~", getWeekStartDate());
+            SignThread signThread = new SignThread(userInfo, 12, signLogRepository, "下午签到", random, nowTime);
             signThread.start();
         });
     }
@@ -118,7 +125,8 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 30, signLogRepository, "下午签退", random);
+            long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userInfo.getEmail(), "随机不签到行为~", getWeekStartDate());
+            SignThread signThread = new SignThread(userInfo, 30, signLogRepository, "下午签退", random, nowTime);
             signThread.start();
         });
     }
@@ -128,7 +136,8 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 30, signLogRepository, "晚上签到", random);
+            long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userInfo.getEmail(), "随机不签到行为~", getWeekStartDate());
+            SignThread signThread = new SignThread(userInfo, 30, signLogRepository, "晚上签到", random, nowTime);
             signThread.start();
         });
     }
@@ -139,9 +148,25 @@ public class SignJob {
 
         List<AutoSignUserInfo> userInfoList = userInfoRepository.findByAutoSignIsTrue();
         userInfoList.forEach(userInfo -> {
-            SignThread signThread = new SignThread(userInfo, 40, signLogRepository, "晚上签退", random);
+            long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userInfo.getEmail(), "随机不签到行为~", getWeekStartDate());
+            SignThread signThread = new SignThread(userInfo, 40, signLogRepository, "晚上签退", random, nowTime);
             signThread.start();
         });
+    }
+
+    /**
+     * 获得本周一所在的日期
+     *
+     * @return
+     */
+    public static Date getWeekStartDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        Date date = cal.getTime();
+        return date;
     }
 
 }

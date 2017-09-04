@@ -17,6 +17,9 @@ public interface SignLogRepository extends JpaRepository<AutoSignLog, Long> {
     @Query("select log from AutoSignLog log where log.email= :email order by log.localDateTime desc ")
     List<AutoSignLog> findByEmail(Pageable pagable, @Param("email") String email);
 
+
+    Long countByEmailAndInfoAndLocalDateTimeAfter(String email, String info, Date date);
+
     @Query("select log from AutoSignLog log order by log.localDateTime desc ")
     List<AutoSignLog> findALlLog(Pageable pagable);
 }
