@@ -86,21 +86,36 @@ public class SignThread extends Thread {
     }
 
     public static boolean isRandomPass(SignThread signThread) {
+
+        /**
+         * 1：打卡时间：
+         上午 8:30-11:40
+         下午 14:20-17:40
+         晚上 开始工作时间自由，但要保证三个小时
+         2. 次数标准
+         研一 10+
+         研二 24-28（去掉周五运动时间）
+         研三 18+
+         */
         long maxLossOf1 = 20;
-        long maxLossOf2 = 6;
+        long maxLossOf2 = 5;
         long maxLossOf3 = 12;
         long maxLoss = 0;
+        int randomRate = 80;
         if (signThread.grade.equals("1")) {
             maxLoss = maxLossOf1;
-        } else if (signThread.grade.equals("2")) {
+            randomRate = 34;
+        } else if (signThread.grade.equals("2") || signThread.grade.equals("博士")) {
             maxLoss = maxLossOf2;
+            randomRate = 80;
         } else if (signThread.grade.equals("3")) {
             maxLoss = maxLossOf3;
+            randomRate = 60;
         }
 
         if (signThread.nowTime >= maxLoss) {
             return false;
-        } else if (signThread.random.nextInt(100) >= 80) {
+        } else if (signThread.random.nextInt(100) >= randomRate) {
             return true;
         } else {
             return false;
