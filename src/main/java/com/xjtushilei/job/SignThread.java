@@ -97,20 +97,20 @@ public class SignThread extends Thread {
          研二 24-28（去掉周五运动时间）
          研三 18+
          */
-        long maxLossOf1 = 20;
-        long maxLossOf2 = 5;
-        long maxLossOf3 = 12;
+        long maxLossOf1 = 17;
+        long maxLossOf2 = 4;
+        long maxLossOf3 = 8;
         long maxLoss = 0;
         int randomRate = 80;
         if (signThread.grade.equals("1")) {
             maxLoss = maxLossOf1;
-            randomRate = 34;
+            randomRate = 40;
         } else if (signThread.grade.equals("2") || signThread.grade.equals("博士")) {
             maxLoss = maxLossOf2;
-            randomRate = 80;
+            randomRate = 87;
         } else if (signThread.grade.equals("3")) {
             maxLoss = maxLossOf3;
-            randomRate = 60;
+            randomRate = 69;
         }
 
         if (signThread.nowTime >= maxLoss) {
