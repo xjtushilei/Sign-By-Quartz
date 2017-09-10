@@ -73,7 +73,7 @@ public class SignJob {
 
             long nowTime = signLogRepository.countByEmailAndInfoAndLocalDateTimeAfter(userinfo.getEmail(), "随机不签到行为~", getWeekStartDate());
 
-            html = html.replace("guyinumber", nowTime + "");
+            html = html.replace("guyinum", nowTime + "");
 
             try {
                 MailUtil.sendMail(userinfo.getEmail(),
